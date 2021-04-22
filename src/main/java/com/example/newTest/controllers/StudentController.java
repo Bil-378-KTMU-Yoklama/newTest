@@ -31,7 +31,7 @@ public class StudentController {
         return studentRepository.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("student/{id}")
     public Student getById(@PathVariable String id){
         Integer tempId = Integer.parseInt(id);
         return studentRepository.findById(tempId).get();
