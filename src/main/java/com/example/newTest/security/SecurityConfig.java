@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.POST, "/student/register").permitAll()
 //                .antMatchers(HttpMethod.POST, "/coach/lessons").permitAll()
-//                .antMatchers(HttpMethod.GET, "/coach/list").permitAll()
+                .antMatchers(HttpMethod.GET, "/user/list").permitAll()
 //                .antMatchers(HttpMethod.GET, "/lesson/list").permitAll()
 //                .antMatchers(HttpMethod.GET, "/student/list").permitAll()
 //                .antMatchers(HttpMethod.POST, "/enroll/getStudents").permitAll()
