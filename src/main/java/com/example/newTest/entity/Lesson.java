@@ -25,6 +25,8 @@ public class Lesson {
     private Integer week;
     @Column (name = "lesson_status")
     private Boolean status;
+    @Column (name = "lesson_semester")
+    private Integer semester;
     @ManyToOne
     @JoinColumn (name = "coach_id")
     private Coach coachId;

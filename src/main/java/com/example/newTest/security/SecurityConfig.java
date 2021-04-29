@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,8 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.POST, "/student/register").permitAll()
-//                .antMatchers(HttpMethod.POST, "/coach/lessons").permitAll()
-                .antMatchers(HttpMethod.GET, "/user/list").permitAll()
+//                .antMatchers(HttpMethod.GET, "/**").permitAll()
+//                .antMatchers(HttpMethod.POST, "/**").permitAll()
+//                .antMatchers(HttpMethod.PUT, "/**").permitAll()
+//                .antMatchers(HttpMethod.PATCH, "/**").permitAll()
+//                .antMatchers(HttpMethod.GET, "/user/list").permitAll()
 //                .antMatchers(HttpMethod.GET, "/lesson/list").permitAll()
 //                .antMatchers(HttpMethod.GET, "/student/list").permitAll()
 //                .antMatchers(HttpMethod.POST, "/enroll/getStudents").permitAll()
@@ -48,6 +52,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 
     @Bean

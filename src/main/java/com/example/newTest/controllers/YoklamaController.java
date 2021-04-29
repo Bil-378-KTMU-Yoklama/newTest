@@ -22,6 +22,7 @@ public class YoklamaController {
     public ResponseEntity<Object> enroll (@RequestBody YoklamaNameDate yoklamaNameDate){
         return yoklamaService.submit(yoklamaNameDate);
     }
+
     @GetMapping ("/list")
     public List<Yoklama> yoklamaList (){
         return yoklamaRepository.findAll();

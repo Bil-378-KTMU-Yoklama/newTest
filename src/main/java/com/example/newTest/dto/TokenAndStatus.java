@@ -1,5 +1,6 @@
 package com.example.newTest.dto;
 
+import com.example.newTest.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TokenAndStatus {
     private String token;
-    private String status;
+    private Role status;
     private Integer id;
 }

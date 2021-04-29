@@ -26,6 +26,8 @@ public class StudentController {
                                                     throws IOException {
         return studentService.studentRegisterService(studentRegister,files);
     }
+
+
     @GetMapping("/list")
     public List<Student> studentList (){
         return studentRepository.findAll();
@@ -34,7 +36,7 @@ public class StudentController {
     @GetMapping("student/{id}")
     public Student getById(@PathVariable String id){
         Integer tempId = Integer.parseInt(id);
-        return studentRepository.findById(tempId).get();
+        return studentRepository.findById(tempId).orElse(null);
     }
 
     @GetMapping("/percentage")

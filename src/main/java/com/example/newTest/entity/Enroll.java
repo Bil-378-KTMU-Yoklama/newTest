@@ -15,6 +15,8 @@ public class Enroll {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "enroll_id")
     private Integer id;
+    @Column (name = "succeed")
+    private Boolean succeed;
     @ManyToOne
     @JoinColumn (name = "student_id")
     private Student studentId;

@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LessonIdandKod {
-    private Integer id;
-    private String kod;
-    private Boolean status;
+@Data
+public class UserInfoSaveDto {
+    private String username;
+    private String password;
+    private String status;
 }

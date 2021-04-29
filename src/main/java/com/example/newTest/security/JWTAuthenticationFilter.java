@@ -35,6 +35,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     public AuthenticationManager authenticationManager;
     private UserInfoRepository userInfoRepository;
+    String ROLE_PREFIX = "ROLE_";
 
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -66,19 +67,22 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             userInfoRepository = webApplicationContext.getBean(UserInfoRepository.class);
         }
 
+        UserInfo userInfo = userInfoRepository.findByUsername(authResult.getName());
+
         String token = JWT.create()
                 .withSubject(((User) authResult.getPrincipal()).getUsername())
+                .withClaim("role", ROLE_PREFIX + userInfo.getStatus().toString())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
-//        response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
-        TokenAndStatus tokenAndStatus = new TokenAndStatus();
-        tokenAndStatus.setToken(TOKEN_PREFIX + token);
-        UserInfo userInfo = userInfoRepository.findByUsername(authResult.getName());
-        tokenAndStatus.setStatus(userInfo.getStatus());
-        tokenAndStatus.setId(userInfo.getId());
-        String tokenJsonResponse = new ObjectMapper().writeValueAsString(tokenAndStatus);
-        response.addHeader("Content-Type", "application/json");
-        response.getWriter().print(tokenJsonResponse);
+        response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+//        TokenAndStatus tokenAndStatus = new TokenAndStatus();
+//        tokenAndStatus.setToken(TOKEN_PREFIX + token);
+//        UserInfo userInfo = userInfoRepository.findByUsername(authResult.getName());
+//        tokenAndStatus.setStatus(userInfo.getStatus());
+//        tokenAndStatus.setId(userInfo.getId());
+//        String tokenJsonResponse = new ObjectMapper().writeValueAsString(tokenAndStatus);
+//        response.addHeader("Content-Type", "application/json");
+//        response.getWriter().print(tokenJsonResponse);
 
     }
 }

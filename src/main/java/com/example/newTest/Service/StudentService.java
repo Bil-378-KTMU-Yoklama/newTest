@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +40,7 @@ public class StudentService {
     public ResponseEntity<Object> studentRegisterService(StudentRegister studentRegister, MultipartFile files) throws IOException {
         UserInfo user_info = new UserInfo(null, studentRegister.getKod(),
                 bCryptPasswordEncoder.encode(studentRegister.getName()+studentRegister.getKod()),
-                "student");
+                Role.STUDENT);
         UserInfo savedUser_info = userInfoRepository.save(user_info);
 //        String[] imagesName = new String [5];
 //        for(int i = 0; i < 5; i++) {
@@ -56,8 +55,8 @@ public class StudentService {
 //        }
         Student st  = new Student(null, studentRegister.getKod(),studentRegister.getName(),
                 studentRegister.getSurname(), studentRegister.getFaculty(),
-                studentRegister.getDepartment(),savedUser_info, path ,null,
-                null, null,null);
+                studentRegister.getDepartment(), studentRegister.getStudentSemester(), savedUser_info, path ,null,
+                null, null, null);
         Student tempSt = studentRepository.save(st);
         return new ResponseEntity<>("Student registered successfully", HttpStatus.OK);
     }
@@ -66,19 +65,19 @@ public class StudentService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         UserInfo userInfo = userInfoRepository.findByUsername(currentPrincipalName);
-        if (userInfo.getStatus().equals("student")){
+        if (userInfo.getStatus().equals(Role.STUDENT)){
             Student student = studentRepository.findByUserId(userInfo);
             List<Enroll> enrolls = enrollRepository.findByStudentId(student);
             List<PercentageInfo> percentageInfos = new ArrayList<>();
-            for(int i = 0; i < enrolls.size(); i++){
-                Lesson lesson = enrolls.get(i).getLessonId();
-                List<Yoklama> yoklamas = yoklamaRepository.findByEnrollId(enrolls.get(i));
-                int count =0;
-                for (int j = 0; j < yoklamas.size();j++) {
-                    if (yoklamas.get(j).getStatus().equals(false)) count++;
+            for (Enroll enroll : enrolls) {
+                Lesson lesson = enroll.getLessonId();
+                List<Yoklama> yoklamas = yoklamaRepository.findByEnrollId(enroll);
+                int count = 0;
+                for (Yoklama yoklama : yoklamas) {
+                    if (yoklama.getStatus().equals(false)) count++;
                 }
-                Float percentage = ((float)(100*count)/lesson.getWeek());
-                PercentageInfo percentageInfo  = new PercentageInfo(lesson.getKod(), percentage, lesson.getStatus());
+                Float percentage = ((float) (100 * count) / lesson.getWeek());
+                PercentageInfo percentageInfo = new PercentageInfo(lesson.getKod(), percentage, lesson.getStatus());
                 percentageInfos.add(percentageInfo);
             }
             return percentageInfos;

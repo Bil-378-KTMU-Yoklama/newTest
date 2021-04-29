@@ -8,8 +8,6 @@ import com.example.newTest.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ public class LessonService {
                     student.getFaculty().equals(lessonFaculty)) {
                 finalList.add(new StudentRegister(student.getId(),student.getKod(),
                         student.getName(), student.getSurname(),student.getFaculty(),
-                        student.getDepartment()));
+                        student.getDepartment(), student.getStudentSemester()));
             }
         }
         return finalList;
@@ -46,13 +44,16 @@ public class LessonService {
 
     public ResponseEntity<Object> setEnroll (LessonRegister lessonRegister){
         System.out.println(lessonRegister);
+        Coach coachOfLesson = coachRepository.findById(lessonRegister.getCoach_id()).orElse(null);
+
         Lesson lesson = new Lesson(null, lessonRegister.getKod(), lessonRegister.getFaculty(),
                 lessonRegister.getDepartment(), lessonRegister.getWeek(),
-                lessonRegister.getStatus(), coachRepository.findById(lessonRegister.getCoach_id()).get());
+                lessonRegister.getStatus(), lessonRegister.getSemester(), coachOfLesson);
+
         Lesson lesson1 = lessonRepository.save(lesson);
         for (Integer student : lessonRegister.getStudents()) {
-            Student student1 = studentRepository.findById(student).get();
-            Enroll enroll = new Enroll(null, student1, lesson1);
+            Student student1 = studentRepository.findById(student).orElse(null);
+            Enroll enroll = new Enroll(null, false, student1, lesson1);
             enrollRepository.save(enroll);
         }
         return new ResponseEntity<>("Lesson registered successfully", HttpStatus.OK);

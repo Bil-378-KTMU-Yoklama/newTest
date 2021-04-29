@@ -25,6 +25,8 @@ public class Student {
     private String faculty;
     @Column (name = "student_department")
     private String department;
+    @Column (name = "student_semester")
+    private Integer studentSemester;
     @OneToOne
     @JoinColumn (name = "user_id")
     private UserInfo userId;

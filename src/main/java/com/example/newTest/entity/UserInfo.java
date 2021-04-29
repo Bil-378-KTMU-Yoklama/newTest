@@ -21,6 +21,7 @@ public class UserInfo {
     private String username;
     @Column (name = "user_password")
     private String password;
+    @Enumerated(EnumType.STRING)
     @Column (name = "user_status")
-    private String status;
+    private Role status;
 }

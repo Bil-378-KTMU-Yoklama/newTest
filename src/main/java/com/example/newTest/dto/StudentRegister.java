@@ -15,4 +15,5 @@ public class StudentRegister {
     private String surname;
     private String faculty;
     private String department;
+    private Integer studentSemester;
 }

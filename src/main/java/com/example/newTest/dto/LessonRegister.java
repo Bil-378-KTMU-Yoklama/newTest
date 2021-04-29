@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class LessonRegister {
     private String kod;
     private String faculty;
@@ -16,5 +16,6 @@ public class LessonRegister {
     private Integer week;
     private Boolean status;
     private Integer coach_id;
+    private Integer semester;
     private List<Integer> students;
 }

@@ -1,9 +1,7 @@
 package com.example.newTest.Service;
 
 
-import com.example.newTest.dto.IdAndStatus;
 import com.example.newTest.dto.LessonIdandKod;
-import com.example.newTest.dto.LessonRegister;
 import com.example.newTest.entity.*;
 import com.example.newTest.dto.CoachRegister;
 import com.example.newTest.repositories.CoachRepository;
@@ -33,9 +31,9 @@ public class CoachService {
     public EnrollRepository enrollRepository;
 
     public void coachRegister(CoachRegister coachRegister) {
-        UserInfo user_info = new UserInfo(null, coachRegister.getLogin(),bCryptPasswordEncoder.encode(coachRegister.getPassword()), "coach");
+        UserInfo user_info = new UserInfo(null, coachRegister.getLogin(),bCryptPasswordEncoder.encode(coachRegister.getPassword()), Role.COACH);
         UserInfo user_info2 = user_infoRepository.save(user_info);
-        Coach coach = new Coach(null, coachRegister.getKod(), coachRegister.getName(), coachRegister.getSurname(), user_info2);
+        Coach coach = new Coach(null, coachRegister.getKod(), coachRegister.getName(), coachRegister.getSurname() ,user_info2);
         coachRepository.save(coach);
     }
 
@@ -46,15 +44,15 @@ public class CoachService {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             UserInfo userInfo = user_infoRepository.findByUsername(currentPrincipalName);
-            if (userInfo.getStatus().equals("coach")){
+            if (userInfo.getStatus().equals(Role.COACH)){
                 Coach coach = coachRepository.findByUserInfo(userInfo);
                 List<Lesson> lesson = lessonRepository.findByCoachId(coach);
 
-                for (int i = 0;i < lesson.size(); i++){
+                for (Lesson value : lesson) {
                     LessonIdandKod lessonIdandKod = new LessonIdandKod();
-                    lessonIdandKod.setId(lesson.get(i).getId());
-                    lessonIdandKod.setKod(lesson.get(i).getKod());
-                    lessonIdandKod.setStatus(lesson.get(i).getStatus());
+                    lessonIdandKod.setId(value.getId());
+                    lessonIdandKod.setKod(value.getKod());
+                    lessonIdandKod.setStatus(value.getStatus());
                     lessonList.add(lessonIdandKod);
                 }
             }

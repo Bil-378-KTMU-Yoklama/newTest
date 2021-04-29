@@ -1,7 +1,5 @@
 package com.example.newTest.Service;
 
-import com.example.newTest.dto.LessonIdandKod;
-import com.example.newTest.dto.StudentRegister;
 import com.example.newTest.dto.YoklamaNameDate;
 import com.example.newTest.entity.Enroll;
 import com.example.newTest.entity.Lesson;
@@ -16,13 +14,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+public interface YoklamaService {
+    ResponseEntity<Object> submit(YoklamaNameDate yoklamaNameDate);
+}
+
 @Service
-public class YoklamaService {
+class YoklamaServiceImpl implements YoklamaService{
     @Autowired
     private YoklamaRepository yoklamaRepository;
     @Autowired
@@ -37,30 +38,30 @@ public class YoklamaService {
         try {
             List<Enroll> enrolls = enrollRepository.findByLessonId(lesson);
             List<Student> students;
-            if (yoklamaNameDate.getStudentId().equals(null))  students = new ArrayList<>();
+            if (yoklamaNameDate.getStudentId().isEmpty())  students = new ArrayList<>();
             else  students = studentRepository.findAllById(yoklamaNameDate.getStudentId());
             System.out.println(enrolls);
             System.out.println(students);
-            for (int i = 0; i<enrolls.size(); i++){
+            for (Enroll enroll : enrolls) {
                 Boolean status = false;
-                for (int j = 0; j< students.size(); j++){
-                    if (enrolls.get(i).getStudentId().equals(students.get(j))){
+                for (Student student : students) {
+                    if (enroll.getStudentId().equals(student)) {
                         status = true;
                         break;
                     }
                 }
-                if (status.equals(true)){
+                if (status.equals(true)) {
                     yoklamaRepository.save(new Yoklama(null, yoklamaNameDate.getName(),
-                            yoklamaNameDate.getDate(),true, enrolls.get(i)));
+                            yoklamaNameDate.getDate(), true, enroll));
                 } else {
                     yoklamaRepository.save(new Yoklama(null, yoklamaNameDate.getName(),
-                            yoklamaNameDate.getDate(),false, enrolls.get(i)));
+                            yoklamaNameDate.getDate(), false, enroll));
                 }
             }
             return new ResponseEntity<>("Yoklama submitted successfully", HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new ResponseEntity<>("Could't find lesson by id, try again", HttpStatus.OK);
+        return new ResponseEntity<>("Couldn't find lesson by id, try again", HttpStatus.OK);
     }
 }

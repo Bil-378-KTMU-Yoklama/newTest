@@ -4,7 +4,7 @@ import com.example.newTest.Service.LessonService;
 import com.example.newTest.dto.DepartmentAndFaculty;
 import com.example.newTest.dto.LessonRegister;
 import com.example.newTest.dto.StudentRegister;
-import com.example.newTest.entity.*;
+import com.example.newTest.entity.Lesson;
 import com.example.newTest.repositories.LessonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +17,9 @@ import java.util.List;
 public class LessonController {
     @Autowired
     public LessonRepository lessonRepository;
-
     @Autowired
     public LessonService lessonService;
+
     @GetMapping("/list")
     public List<Lesson> lessonList (){
         return lessonRepository.findAll();
@@ -38,7 +38,7 @@ public class LessonController {
     @GetMapping("/lesson/{id}")
     public Lesson getById(@PathVariable String id){
         Integer tempId = Integer.parseInt(id);
-        return lessonRepository.findById(tempId).get();
+        return lessonRepository.findById(tempId).orElse(null);
     }
 
 }
