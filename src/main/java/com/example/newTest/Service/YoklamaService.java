@@ -36,7 +36,8 @@ class YoklamaServiceImpl implements YoklamaService{
     public ResponseEntity<Object> submit (YoklamaNameDate yoklamaNameDate){
         Optional<Lesson> lesson = lessonRepository.findById(yoklamaNameDate.getLessonId());
         try {
-            List<Enroll> enrolls = enrollRepository.findByLessonId(lesson);
+            if (!lesson.isPresent()) return new ResponseEntity<>("Lesson is not found!", HttpStatus.NOT_FOUND);
+            List<Enroll> enrolls = enrollRepository.findByLessonId(lesson.get());
             List<Student> students;
             if (yoklamaNameDate.getStudentId().isEmpty())  students = new ArrayList<>();
             else  students = studentRepository.findAllById(yoklamaNameDate.getStudentId());

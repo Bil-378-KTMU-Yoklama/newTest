@@ -31,8 +31,8 @@ public class LessonController {
     }
 
     @PostMapping("/register2")
-    public ResponseEntity<Object> setEnroll (@RequestBody LessonRegister lessonRegister){
-        return lessonService.setEnroll(lessonRegister);
+    public ResponseEntity<Object> registerLesson (@RequestBody LessonRegister lessonRegister){
+        return lessonService.registerLesson(lessonRegister);
     }
 
     @GetMapping("/lesson/{id}")

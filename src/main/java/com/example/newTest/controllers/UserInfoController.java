@@ -1,4 +1,5 @@
 package com.example.newTest.controllers;
+
 import com.example.newTest.Service.UserService;
 import com.example.newTest.dto.UserInfoSaveDto;
 import com.example.newTest.entity.UserInfo;
@@ -18,18 +19,18 @@ public class UserInfoController {
     public UserService userInfoService;
 
     @GetMapping("/list")
-    public List<UserInfo> user_infoList (){
+    public List<UserInfo> user_infoList() {
         return user_infoRepository.findAll();
     }
 
     @GetMapping("/user/{id}")
-    public UserInfo show(@PathVariable String id){
+    public UserInfo show(@PathVariable String id) {
         Integer newId = Integer.parseInt(id);
         return user_infoRepository.findById(newId).orElse(null);
     }
 
     @PostMapping("/save")
-    public UserInfo save (@RequestBody UserInfoSaveDto userDto){
+    public UserInfo save(@RequestBody UserInfoSaveDto userDto) {
         return userInfoService.save(userDto);
     }
 }

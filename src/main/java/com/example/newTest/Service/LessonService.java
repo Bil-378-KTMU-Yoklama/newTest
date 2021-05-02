@@ -25,6 +25,8 @@ public class LessonService {
     LessonRepository lessonRepository;
     @Autowired
     UserInfoRepository userInfoRepository;
+    @Autowired
+    EnrollService enrollService;
 
     public List<StudentRegister> getStudentList (DepartmentAndFaculty departmentAndFaculty){
         String lessonFaculty = departmentAndFaculty.getFaculty();
@@ -42,7 +44,7 @@ public class LessonService {
         return finalList;
     }
 
-    public ResponseEntity<Object> setEnroll (LessonRegister lessonRegister){
+    public ResponseEntity<Object> registerLesson (LessonRegister lessonRegister){
         System.out.println(lessonRegister);
         Coach coachOfLesson = coachRepository.findById(lessonRegister.getCoach_id()).orElse(null);
 
@@ -51,11 +53,8 @@ public class LessonService {
                 lessonRegister.getStatus(), lessonRegister.getSemester(), coachOfLesson);
 
         Lesson lesson1 = lessonRepository.save(lesson);
-        for (Integer student : lessonRegister.getStudents()) {
-            Student student1 = studentRepository.findById(student).orElse(null);
-            Enroll enroll = new Enroll(null, false, student1, lesson1);
-            enrollRepository.save(enroll);
-        }
+
+        enrollService.enrollLessonToStudents(lesson1);
         return new ResponseEntity<>("Lesson registered successfully", HttpStatus.OK);
     }
 

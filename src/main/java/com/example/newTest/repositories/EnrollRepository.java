@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
-    List<Enroll> findByLessonId (Optional<Lesson> lesson);
+    List<Enroll> findByLessonId (Lesson lesson);
     Enroll findByLessonIdAndStudentId (Lesson lesson, Student student);
     List<Enroll> findByStudentId (Student student);
 }
